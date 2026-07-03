@@ -50,7 +50,7 @@ const Login = () => {
           <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-2">
             Welcome Back
           </h1>
-          <p className="text-slate-400">Sign in to continue to AlgoU</p>
+          <p className="text-slate-400">Sign in to continue to OnlineJudge</p>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-6">

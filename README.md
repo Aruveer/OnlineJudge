@@ -6,7 +6,7 @@ OnlineJudge is a full-stack competitive programming platform where users can bro
 
 The application will be built using the MERN stack along with a few other technologies for secure code execution and queue management:
 
-- **Frontend:** React, Monaco Editor (for the code editor interface)
+- **Frontend:** React
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB (via Mongoose)
 - **Message Queue:** Bull + Redis (for handling asynchronous code execution jobs)

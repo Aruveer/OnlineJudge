@@ -58,7 +58,7 @@ const Register = () => {
           <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400 mb-2">
             Create Account
           </h1>
-          <p className="text-slate-400">Join AlgoU today and start coding</p>
+          <p className="text-slate-400">Join OnlineJudge today and start coding</p>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-5">
