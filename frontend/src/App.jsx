@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ProblemList from './pages/ProblemList';
@@ -12,7 +13,7 @@ function App() {
       <Router>
         <Toaster position="top-center" />
         <Routes>
-          <Route path="/" element={<Navigate to="/problems" replace />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/problems" element={<ProblemList />} />
