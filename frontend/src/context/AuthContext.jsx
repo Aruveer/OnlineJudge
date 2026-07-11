@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
+import { logout } from '../api/auth';
 
 export const AuthContext = createContext();
 
@@ -18,7 +19,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(userData));
   };
 
-  const logoutUser = () => {
+  const logoutUser = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Failed to logout from backend', error);
+    }
     setUser(null);
     localStorage.removeItem('user');
   };
