@@ -1,0 +1,40 @@
+const { exec } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+const outputPath = path.join(__dirname, 'outputs');
+
+if (!fs.existsSync(outputPath)) {
+  fs.mkdirSync(outputPath, { recursive: true });
+}
+
+const executeCpp = (filepath, inputPath) => {
+  const jobId = path.basename(filepath).split('.')[0];
+  const outPath = path.join(outputPath, `${jobId}.out`);
+
+  return new Promise((resolve, reject) => {
+    // Compile and run piping input
+    const command = `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.out < ${inputPath}`;
+    
+    exec(command, { timeout: 5000 }, (error, stdout, stderr) => {
+      // Clean up executable
+      fs.unlink(outPath, (unlinkErr) => {
+        if (unlinkErr) console.error(`Failed to delete out file ${outPath}`, unlinkErr);
+      });
+      
+      if (error) {
+        if (error.killed) {
+          reject('Execution Timed Out');
+        } else {
+          reject(stderr || error.message);
+        }
+      } else {
+        resolve(stdout);
+      }
+    });
+  });
+};
+
+module.exports = {
+  executeCpp,
+};

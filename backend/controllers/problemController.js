@@ -118,32 +118,89 @@ const deleteProblem = async (req, res) => {
   }
 };
 
-// @desc    Submit code to compiler microservice
-// @route   POST /api/problems/:id/submit
+// @desc    Run code with custom input
+// @route   POST /api/problems/run
 // @access  Private
-const submitCode = async (req, res) => {
+const runCode = async (req, res) => {
   try {
-    const { code, language } = req.body;
+    const { code, language, input } = req.body;
+    const compilerUrl = process.env.COMPILER_URL || 'http://localhost:5001';
     
-    // In a real application, you'd fetch the problem by req.params.id, 
-    // get the test cases, and append them to the code before sending to compiler.
-    // For this MVP, we will just send the user's code to the compiler service directly.
-    
-    const compilerResponse = await fetch('http://localhost:5001/execute', {
+    const compilerResponse = await fetch(`${compilerUrl}/execute`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ code, language })
+      body: JSON.stringify({ code, language, input })
     });
 
     const data = await compilerResponse.json();
 
     if (!compilerResponse.ok) {
-      return res.status(400).json({ message: 'Compilation/Execution Error', details: data });
+      return res.status(400).json({ message: 'Execution Error', details: data });
     }
 
     res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error communicating with compiler service', error: error.message });
+  }
+};
+
+// @desc    Submit code against test cases
+// @route   POST /api/problems/:id/submit
+// @access  Private
+const submitCode = async (req, res) => {
+  try {
+    const { code, language } = req.body;
+    const problemId = req.params.id;
+    
+    const problem = await Problem.findById(problemId);
+    if (!problem) {
+      return res.status(404).json({ message: 'Problem not found' });
+    }
+
+    if (!problem.testCases || problem.testCases.length === 0) {
+      return res.status(400).json({ message: 'No test cases defined for this problem' });
+    }
+
+    const compilerUrl = process.env.COMPILER_URL || 'http://localhost:5001';
+    let passed = 0;
+    let results = [];
+
+    for (let i = 0; i < problem.testCases.length; i++) {
+      const tc = problem.testCases[i];
+      // Format the input correctly (it might just be raw strings in the DB now, or JSON arrays)
+      // Since our new Two Sum seed script saves input as "[2,7,11,15]\n9", we'll just pass it as string input!
+      const inputStr = tc.input;
+      
+      const compilerResponse = await fetch(`${compilerUrl}/execute`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, language, input: inputStr })
+      });
+
+      const data = await compilerResponse.json();
+      
+      if (!compilerResponse.ok) {
+        results.push(`Test ${i + 1}: ERROR (${data.error || 'Execution failed'})`);
+        continue;
+      }
+
+      // Very simple string match for MVP
+      const output = (data.output || '').trim();
+      const expected = tc.expectedOutput.trim();
+
+      if (output === expected) {
+        passed++;
+        results.push(`Test ${i + 1}: PASS`);
+      } else {
+        results.push(`Test ${i + 1}: FAIL (Expected: ${expected}, Got: ${output})`);
+      }
+    }
+
+    res.status(200).json({ 
+      output: results.join('\n') + `\n\nResult: ${passed}/${problem.testCases.length} Passed`
+    });
   } catch (error) {
     res.status(500).json({ message: 'Error communicating with compiler service', error: error.message });
   }
@@ -156,4 +213,5 @@ module.exports = {
   updateProblem,
   deleteProblem,
   submitCode,
+  runCode
 };

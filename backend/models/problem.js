@@ -6,10 +6,20 @@ const problemSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  statement: {
+  description: {
     type: String,
     required: true,
   },
+  starterCode: {
+    type: String,
+    default: '// Write your solution here\n'
+  },
+  testCases: [
+    {
+      input: { type: String, required: true },
+      expectedOutput: { type: String, required: true }
+    }
+  ],
   difficulty: {
     type: String,
     enum: ['Easy', 'Medium', 'Hard'],

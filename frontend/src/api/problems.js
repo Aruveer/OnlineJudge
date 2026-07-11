@@ -36,3 +36,8 @@ export const submitCode = async (id, code, language) => {
   const response = await problemsApi.post(`/${id}/submit`, { code, language });
   return response.data;
 };
+
+export const runCodeApi = async (code, language, input) => {
+  const response = await problemsApi.post('/run', { code, language, input });
+  return response.data;
+};
