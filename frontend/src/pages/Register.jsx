@@ -39,7 +39,7 @@ const Register = () => {
       const userData = await register({ firstName, lastName, email, password });
       loginUser(userData);
       toast.success('Account created successfully!');
-      navigate('/');
+      navigate('/problems');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Registration failed.');
     } finally {
@@ -48,7 +48,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-[#0f172a] to-blue-900 p-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4 relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute top-[10%] right-[10%] w-[30rem] h-[30rem] bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
       <div className="absolute bottom-[10%] left-[10%] w-[30rem] h-[30rem] bg-teal-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -58,7 +58,7 @@ const Register = () => {
           <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400 mb-2">
             Create Account
           </h1>
-          <p className="text-slate-400">Join OnlineJudge today and start coding</p>
+          <p className="text-slate-400">Join Solvix today and start coding</p>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-5">
@@ -133,7 +133,7 @@ const Register = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 mt-2 bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-400 hover:to-blue-400 text-white font-bold rounded-xl shadow-lg transform transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 px-4 mt-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transform transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? 'Creating Account...' : 'Sign Up'}
           </button>
