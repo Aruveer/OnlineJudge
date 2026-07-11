@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getProblemById } from '../api/problems';
+import { getProblemById, submitCode } from '../api/problems';
 import { toast } from 'react-hot-toast';
 
 const SolveProblem = () => {
@@ -29,15 +29,22 @@ const SolveProblem = () => {
     fetchProblem();
   }, [id]);
 
-  const handleRunCode = () => {
+  const handleRunCode = async () => {
     setIsRunning(true);
     setOutput('Running code...\n');
     
-    // Simulate backend execution delay
-    setTimeout(() => {
-      setOutput((prev) => prev + '\n> Test Cases: Passed 0/3\n> Error: Backend execution not yet implemented (Chunk 5).');
+    try {
+      const response = await submitCode(id, code, language);
+      setOutput((prev) => prev + '\n> Output:\n' + response.output);
+    } catch (error) {
+      if (error.response?.data?.details?.output) {
+        setOutput((prev) => prev + '\n> Error Output:\n' + error.response.data.details.output);
+      } else {
+        setOutput((prev) => prev + '\n> Request Error: ' + (error.response?.data?.message || error.message));
+      }
+    } finally {
       setIsRunning(false);
-    }, 1500);
+    }
   };
 
   const getDifficultyColor = (difficulty) => {

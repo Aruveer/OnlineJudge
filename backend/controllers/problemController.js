@@ -118,10 +118,42 @@ const deleteProblem = async (req, res) => {
   }
 };
 
+// @desc    Submit code to compiler microservice
+// @route   POST /api/problems/:id/submit
+// @access  Private
+const submitCode = async (req, res) => {
+  try {
+    const { code, language } = req.body;
+    
+    // In a real application, you'd fetch the problem by req.params.id, 
+    // get the test cases, and append them to the code before sending to compiler.
+    // For this MVP, we will just send the user's code to the compiler service directly.
+    
+    const compilerResponse = await fetch('http://localhost:5001/execute', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ code, language })
+    });
+
+    const data = await compilerResponse.json();
+
+    if (!compilerResponse.ok) {
+      return res.status(400).json({ message: 'Compilation/Execution Error', details: data });
+    }
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error communicating with compiler service', error: error.message });
+  }
+};
+
 module.exports = {
   getProblems,
   getProblemById,
   createProblem,
   updateProblem,
   deleteProblem,
+  submitCode,
 };

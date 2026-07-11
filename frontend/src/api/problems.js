@@ -31,3 +31,8 @@ export const deleteProblem = async (id) => {
   const response = await problemsApi.delete(`/${id}`);
   return response.data;
 };
+
+export const submitCode = async (id, code, language) => {
+  const response = await problemsApi.post(`/${id}/submit`, { code, language });
+  return response.data;
+};
