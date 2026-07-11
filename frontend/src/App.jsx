@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ProblemList from './pages/ProblemList';
+import SolveProblem from './pages/SolveProblem';
 import AdminCreateProblem from './pages/AdminCreateProblem';
 import { AuthProvider } from './context/AuthContext';
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/problems" element={<ProblemList />} />
+          <Route path="/problems/:id" element={<SolveProblem />} />
           <Route path="/admin/create-problem" element={<AdminCreateProblem />} />
         </Routes>
       </Router>
