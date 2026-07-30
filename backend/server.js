@@ -8,6 +8,8 @@ const connectDB = require('./database/db');
 const authRoutes = require('./routes/authRoutes');
 const problemRoutes = require('./routes/problemRoutes');
 
+const aiRoutes = require('./routes/aiRoutes');
+
 const app = express();
 
 // Connect to database
@@ -24,6 +26,7 @@ app.use(cookieParser());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/problems', problemRoutes);
+app.use('/api/ai', aiRoutes);
 
 app.get('/', (req, res) => {
   res.send('OnlineJudge API is running');

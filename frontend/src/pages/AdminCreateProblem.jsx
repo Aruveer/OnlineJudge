@@ -11,7 +11,7 @@ const AdminCreateProblem = () => {
 
   const [formData, setFormData] = useState({
     title: '',
-    statement: '',
+    description: '',
     difficulty: 'Easy',
     tags: '',
     timeLimit: 1.0,
@@ -68,35 +68,34 @@ const AdminCreateProblem = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-200 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-white">Create New Problem</h1>
-          <button onClick={() => navigate('/problems')} className="text-slate-400 hover:text-white transition">
-            &larr; Back to Problems
-          </button>
-        </div>
+    <div className="p-8 max-w-4xl mx-auto w-full">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Create New Problem</h1>
+        <button onClick={() => navigate('/problems')} className="text-sm font-medium text-blue-600 hover:text-blue-500 transition">
+          &larr; Back to Problems
+        </button>
+      </div>
 
-        <div className="glass-panel rounded-2xl p-8 border border-slate-800">
-          <form onSubmit={onSubmit} className="space-y-8">
+      <div className="bg-white dark:bg-[#111827] rounded-2xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
+        <form onSubmit={onSubmit} className="space-y-8">
+          
+          {/* Basic Details */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2">Basic Details</h2>
             
-            {/* Basic Details */}
-            <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-blue-400 border-b border-slate-800 pb-2">Basic Details</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300">Title</label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleFormChange}
-                    required
-                    className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="e.g. Two Sum"
-                  />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleFormChange}
+                  required
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="e.g. Two Sum"
+                />
+              </div>
                 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-300">Difficulty</label>
@@ -116,8 +115,8 @@ const AdminCreateProblem = () => {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-300">Problem Statement</label>
                 <textarea
-                  name="statement"
-                  value={formData.statement}
+                  name="description"
+                  value={formData.description}
                   onChange={handleFormChange}
                   required
                   rows="6"
@@ -241,7 +240,6 @@ const AdminCreateProblem = () => {
             </button>
           </form>
         </div>
-      </div>
     </div>
   );
 };

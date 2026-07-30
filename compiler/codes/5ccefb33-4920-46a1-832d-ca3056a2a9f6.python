@@ -1,0 +1,10 @@
+import sys
+
+def main():
+    # Read all input from standard input
+    input_data = sys.stdin.read()
+    # Write your code here
+    print("Hi");
+    
+if __name__ == '__main__':
+    main()

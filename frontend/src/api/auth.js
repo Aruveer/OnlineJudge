@@ -21,3 +21,18 @@ export const logout = async () => {
   const response = await authApi.post('logout');
   return response.data;
 };
+
+export const getStats = async () => {
+  const response = await authApi.get('stats');
+  return response.data;
+};
+
+export const updateProfile = async (profileData) => {
+  const response = await authApi.put('profile', profileData);
+  return response.data;
+};
+
+export const getAllUsers = async () => {
+  const response = await authApi.get('users');
+  return response.data;
+};

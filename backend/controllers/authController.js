@@ -1,4 +1,6 @@
 const AuthUser = require('../models/authUser');
+const Problem = require('../models/problem');
+const Submission = require('../models/submission');
 const jwt = require('jsonwebtoken');
 
 // Generate JWT
@@ -51,6 +53,7 @@ const registerUser = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        role: user.role,
         token
       });
     } else {
@@ -87,6 +90,7 @@ const loginUser = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        role: user.role,
         token
       });
     } else {
@@ -109,8 +113,81 @@ const logoutUser = async (req, res) => {
 };
 
 
+// @desc    Get dashboard stats
+// @route   GET /api/auth/stats
+// @access  Private
+const getStats = async (req, res) => {
+  try {
+    const totalProblems = await Problem.countDocuments();
+    let totalUsers = null;
+
+    if (req.user && req.user.role === 'admin') {
+      totalUsers = await AuthUser.countDocuments();
+    }
+
+    const solvedProblemsData = await Submission.aggregate([
+      { $match: { userId: req.user._id, verdict: 'Accepted' } },
+      { $group: { _id: '$problemId' } },
+      { $count: 'solvedProblems' }
+    ]);
+    
+    const solvedProblems = solvedProblemsData.length > 0 ? solvedProblemsData[0].solvedProblems : 0;
+
+    res.status(200).json({
+      totalProblems,
+      solvedProblems,
+      ...(totalUsers !== null && { totalUsers })
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+const updateProfile = async (req, res) => {
+  try {
+    const user = await AuthUser.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.firstName = req.body.firstName || user.firstName;
+    user.lastName = req.body.lastName || user.lastName;
+    user.email = req.body.email || user.email;
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      email: updatedUser.email,
+      role: updatedUser.role,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get all users
+// @route   GET /api/auth/users
+// @access  Private/Admin
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await AuthUser.find({}).select('-password').sort({ createdAt: -1 });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
-  logoutUser
+  logoutUser,
+  getStats,
+  updateProfile,
+  getAllUsers
 };

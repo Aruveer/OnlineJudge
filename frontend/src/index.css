@@ -1,10 +1,14 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 @theme {
-  --color-primary: #3b82f6;
-  --color-primary-focus: #2563eb;
-  --color-bg-dark: #0f172a;
-  --color-card-dark: #1e293b;
+  --color-primary: #0070f3; /* Vercel blue */
+  --color-primary-focus: #0051b3;
+  --color-bg-light: #fafafa;
+  --color-bg-dark: #000000;
+  --color-card-dark: #111111;
+  --color-border-dark: #333333;
   --color-accent: #8b5cf6;
   --color-accent-focus: #7c3aed;
 
@@ -28,6 +32,12 @@
     50% { transform: translateY(-20px); }
     100% { transform: translateY(0px); }
   }
+
+  --animate-marquee: marquee 30s linear infinite;
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
 }
 
 :root {
@@ -35,6 +45,12 @@
   line-height: 1.5;
   font-weight: 400;
 
+  color-scheme: light;
+  background-color: var(--color-bg-light);
+  color: #1e293b;
+}
+
+:root.dark {
   color-scheme: dark;
   background-color: var(--color-bg-dark);
   color: rgba(255, 255, 255, 0.87);
@@ -48,11 +64,18 @@ body {
 }
 
 .glass-panel {
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(10, 10, 10, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.glass-card {
+  background: linear-gradient(145deg, rgba(20,20,20,0.8) 0%, rgba(10,10,10,0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .text-gradient {

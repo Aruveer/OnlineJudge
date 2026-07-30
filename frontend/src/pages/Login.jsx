@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { AuthContext } from '../context/AuthContext';
 import { login } from '../api/auth';
@@ -30,7 +31,7 @@ const Login = () => {
       const userData = await login({ email, password });
       loginUser(userData);
       toast.success('Successfully logged in!');
-      navigate('/problems');
+      navigate('/dashboard');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
@@ -39,18 +40,44 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4 relative overflow-hidden">
-      {/* Background decorations */}
+    <div className="min-h-screen flex flex-col bg-[#000] relative overflow-hidden font-sans">
+      {/* Navigation */}
+      <nav className="relative z-20 container mx-auto px-6 py-6 flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center space-x-3 group cursor-pointer">
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center font-bold text-xl text-black transition-transform duration-300 group-hover:scale-105">
+              S
+            </div>
+            <span className="text-2xl font-bold tracking-tight text-white">SolveIt</span>
+          </Link>
+        </div>
+        <div className="flex items-center gap-4">
+          <Link to="/login" className="px-5 py-2.5 text-sm font-medium text-slate-300 hover:text-white transition-colors">
+            Login
+          </Link>
+          <Link to="/register" className="px-5 py-2.5 text-sm font-medium bg-white text-black rounded-full hover:bg-slate-200 transition-all shadow-lg hover:scale-105">
+            Register
+          </Link>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <div className="flex-1 flex items-center justify-center p-4 relative z-10">
+        {/* Background decorations */}
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
       <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
       <div className="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-emerald-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
 
-      <div className="glass-panel w-full max-w-md p-8 rounded-3xl relative z-10 transition-all hover:shadow-[0_0_40px_rgba(59,130,246,0.3)]">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="glass-card w-full max-w-md p-8 relative z-10 transition-all hover:shadow-[0_0_40px_rgba(255,255,255,0.05)]">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-2">
+          <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">
             Welcome Back
           </h1>
-          <p className="text-slate-400">Sign in to continue to Solvix</p>
+          <p className="text-slate-400">Sign in to continue to SolveIt</p>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-6">
@@ -62,7 +89,7 @@ const Login = () => {
               value={email}
               onChange={onChange}
               required
-              className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+              className="w-full px-4 py-3 rounded-xl bg-black/50 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-slate-500 transition duration-200"
               placeholder="john@example.com"
             />
           </div>
@@ -75,18 +102,19 @@ const Login = () => {
               value={password}
               onChange={onChange}
               required
-              className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+              className="w-full px-4 py-3 rounded-xl bg-black/50 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-slate-500 transition duration-200"
               placeholder="••••••••"
             />
           </div>
 
-          <button
+          <motion.button
+            whileTap={{ scale: 0.97 }}
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transform transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 px-4 bg-white text-black font-bold rounded-xl shadow-lg transition-colors hover:bg-slate-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? 'Signing In...' : 'Sign In'}
-          </button>
+          </motion.button>
         </form>
 
         <p className="mt-8 text-center text-slate-400">
@@ -95,6 +123,7 @@ const Login = () => {
             Create an account
           </Link>
         </p>
+      </motion.div>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 const Problem = require('../models/problem');
 const TestCase = require('../models/testCase');
+const Submission = require('../models/submission');
 
 // @desc    Get all problems
 // @route   GET /api/problems
@@ -21,13 +22,8 @@ const getProblemById = async (req, res) => {
     const problem = await Problem.findById(req.params.id);
 
     if (problem) {
-      // Fetch only sample test cases for the problem page
-      const testCases = await TestCase.find({ problemId: problem._id, isSample: true }).select('input expectedOutput');
-      
-      res.json({
-        ...problem.toObject(),
-        testCases
-      });
+      // The testCases are embedded in the Problem schema directly
+      res.json(problem);
     } else {
       res.status(404).json({ message: 'Problem not found' });
     }
@@ -41,28 +37,20 @@ const getProblemById = async (req, res) => {
 // @access  Private
 const createProblem = async (req, res) => {
   try {
-    const { title, statement, difficulty, tags, timeLimit, memoryLimit, testCases } = req.body;
+    const { title, description, difficulty, tags, timeLimit, memoryLimit, testCases } = req.body;
 
     const problem = new Problem({
       title,
-      statement,
+      description,
       difficulty,
       tags,
       timeLimit,
       memoryLimit,
       createdBy: req.user._id,
+      testCases,
     });
 
     const createdProblem = await problem.save();
-
-    // If test cases are provided, save them as well
-    if (testCases && testCases.length > 0) {
-      const testCasesToInsert = testCases.map(tc => ({
-        ...tc,
-        problemId: createdProblem._id
-      }));
-      await TestCase.insertMany(testCasesToInsert);
-    }
 
     res.status(201).json(createdProblem);
   } catch (error) {
@@ -137,7 +125,7 @@ const runCode = async (req, res) => {
     const data = await compilerResponse.json();
 
     if (!compilerResponse.ok) {
-      return res.status(400).json({ message: 'Execution Error', details: data });
+      return res.status(400).json({ message: data.error || 'Execution Error', details: data });
     }
 
     res.status(200).json(data);
@@ -198,11 +186,87 @@ const submitCode = async (req, res) => {
       }
     }
 
+    let verdict = 'Wrong Answer';
+    if (results.some(r => r.includes('ERROR'))) {
+      verdict = 'Runtime Error';
+    } else if (passed === problem.testCases.length) {
+      verdict = 'Accepted';
+    }
+
+    // Save submission to database
+    const submission = new Submission({
+      userId: req.user._id,
+      problemId: problem._id,
+      code,
+      language,
+      verdict,
+      passedCount: passed,
+      totalTestCases: problem.testCases.length
+    });
+    await submission.save();
+
     res.status(200).json({ 
-      output: results.join('\n') + `\n\nResult: ${passed}/${problem.testCases.length} Passed`
+      output: results.join('\n') + `\n\nResult: ${passed}/${problem.testCases.length} Passed`,
+      verdict
     });
   } catch (error) {
     res.status(500).json({ message: 'Error communicating with compiler service', error: error.message });
+  }
+};
+
+// @desc    Get user submissions for a specific problem
+// @route   GET /api/problems/:id/submissions
+// @access  Private
+const getUserSubmissions = async (req, res) => {
+  try {
+    const submissions = await Submission.find({ 
+      problemId: req.params.id, 
+      userId: req.user._id 
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json(submissions);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch submissions', error: error.message });
+  }
+};
+
+// @desc    Get global leaderboard
+// @route   GET /api/problems/leaderboard
+// @access  Public
+const getLeaderboard = async (req, res) => {
+  try {
+    // We want to find the number of UNIQUE problems solved by each user (verdict: 'Accepted')
+    const leaderboard = await Submission.aggregate([
+      { $match: { verdict: 'Accepted' } },
+      { $group: {
+          _id: { userId: '$userId', problemId: '$problemId' },
+          lastAccepted: { $max: '$createdAt' }
+      }},
+      { $group: {
+          _id: '$_id.userId',
+          problemsSolved: { $sum: 1 },
+          lastAcceptedSubmission: { $max: '$lastAccepted' }
+      }},
+      { $lookup: {
+          from: 'authusers',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'user'
+      }},
+      { $unwind: '$user' },
+      { $project: {
+          _id: 1,
+          firstName: '$user.firstName',
+          lastName: '$user.lastName',
+          problemsSolved: 1,
+          lastAcceptedSubmission: 1
+      }},
+      { $sort: { problemsSolved: -1, lastAcceptedSubmission: 1 } }
+    ]);
+
+    res.status(200).json(leaderboard);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch leaderboard', error: error.message });
   }
 };
 
@@ -213,5 +277,7 @@ module.exports = {
   updateProblem,
   deleteProblem,
   submitCode,
-  runCode
+  runCode,
+  getUserSubmissions,
+  getLeaderboard
 };

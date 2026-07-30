@@ -32,8 +32,18 @@ export const deleteProblem = async (id) => {
   return response.data;
 };
 
-export const submitCode = async (id, code, language) => {
-  const response = await problemsApi.post(`/${id}/submit`, { code, language });
+export const submitCode = async (problemId, code, language) => {
+  const response = await problemsApi.post(`${problemId}/submit`, { code, language });
+  return response.data;
+};
+
+export const getUserSubmissions = async (problemId) => {
+  const response = await problemsApi.get(`${problemId}/submissions`);
+  return response.data;
+};
+
+export const getLeaderboard = async () => {
+  const response = await problemsApi.get('leaderboard');
   return response.data;
 };
 

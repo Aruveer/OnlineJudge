@@ -7,11 +7,14 @@ const {
   updateProblem,
   deleteProblem,
   submitCode,
-  runCode
+  runCode,
+  getUserSubmissions,
+  getLeaderboard
 } = require('../controllers/problemController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
-// Public routes for reading problems
+// Public routes
+router.get('/leaderboard', getLeaderboard); // Must be before /:id
 router.get('/', getProblems);
 router.get('/:id', getProblemById);
 
@@ -25,5 +28,8 @@ router.post('/run', protect, runCode);
 
 // Route for submitting code to the compiler
 router.post('/:id/submit', protect, submitCode);
+
+// Route for getting past submissions for a problem
+router.get('/:id/submissions', protect, getUserSubmissions);
 
 module.exports = router;

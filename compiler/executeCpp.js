@@ -10,11 +10,11 @@ if (!fs.existsSync(outputPath)) {
 
 const executeCpp = (filepath, inputPath) => {
   const jobId = path.basename(filepath).split('.')[0];
-  const outPath = path.join(outputPath, `${jobId}.out`);
+  const outPath = path.join(outputPath, `${jobId}.exe`);
 
   return new Promise((resolve, reject) => {
     // Compile and run piping input
-    const command = `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.out < ${inputPath}`;
+    const command = `g++ "${filepath}" -o "${outPath}" && "${outPath}" < "${inputPath}"`;
     
     exec(command, { timeout: 5000 }, (error, stdout, stderr) => {
       // Clean up executable
