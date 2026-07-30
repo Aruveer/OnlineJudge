@@ -8,6 +8,7 @@ import { ThemeContext } from '../context/ThemeContext';
 import { useContext } from 'react';
 import { marked } from 'marked';
 import { motion } from 'framer-motion';
+import DOMPurify from 'dompurify';
 
 const languageTemplates = {
   javascript: `const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    // Write your code here\n    \n}\n\nmain();`,
@@ -349,7 +350,7 @@ const SolveProblem = () => {
                 </div>
 
                 <div className="prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-300">
-                  <div dangerouslySetInnerHTML={{ __html: problem.description }} />
+                  <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(problem.description) }} />
                 </div>
 
                 {/* Examples */}
