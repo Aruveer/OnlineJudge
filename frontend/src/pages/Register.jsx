@@ -99,7 +99,6 @@ const Register = () => {
                 onChange={onChange}
                 required
                 className="w-full px-3 py-2.5 rounded-xl bg-black/50 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-slate-500 transition text-sm"
-                placeholder="First Name"
               />
             </div>
             <div className="space-y-1">
@@ -111,7 +110,6 @@ const Register = () => {
                 onChange={onChange}
                 required
                 className="w-full px-3 py-2.5 rounded-xl bg-black/50 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-slate-500 transition text-sm"
-                placeholder="Last Name"
               />
             </div>
           </div>

@@ -90,7 +90,6 @@ const Login = () => {
               onChange={onChange}
               required
               className="w-full px-4 py-3 rounded-xl bg-black/50 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-slate-500 transition duration-200"
-              placeholder="john@example.com"
             />
           </div>
 
@@ -103,7 +102,6 @@ const Login = () => {
               onChange={onChange}
               required
               className="w-full px-4 py-3 rounded-xl bg-black/50 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-slate-500 transition duration-200"
-              placeholder="••••••••"
             />
           </div>
 
