@@ -133,9 +133,75 @@ const getStats = async (req, res) => {
     
     const solvedProblems = solvedProblemsData.length > 0 ? solvedProblemsData[0].solvedProblems : 0;
 
+    // Aggregate difficulty data
+    const difficultyStatsRaw = await Submission.aggregate([
+      { $match: { userId: req.user._id, verdict: 'Accepted' } },
+      { $group: { _id: '$problemId' } },
+      { $lookup: {
+          from: 'problems',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'problem'
+      }},
+      { $unwind: '$problem' },
+      { $group: { _id: '$problem.difficulty', count: { $sum: 1 } } }
+    ]);
+
+    // Format difficulty data for Recharts (Easy, Medium, Hard)
+    const difficultyData = [
+      { name: 'Easy', value: 0, color: '#10b981' },
+      { name: 'Medium', value: 0, color: '#f59e0b' },
+      { name: 'Hard', value: 0, color: '#ef4444' }
+    ];
+
+    difficultyStatsRaw.forEach(stat => {
+      const index = difficultyData.findIndex(d => d.name === stat._id);
+      if (index !== -1) {
+        difficultyData[index].value = stat.count;
+      }
+    });
+
+    // Aggregate activity data (last 7 days)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+
+    const activityStatsRaw = await Submission.aggregate([
+      { $match: { 
+          userId: req.user._id, 
+          verdict: 'Accepted',
+          createdAt: { $gte: sevenDaysAgo }
+      }},
+      { $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
+          },
+          solved: { $sum: 1 }
+      }},
+      { $sort: { _id: 1 } }
+    ]);
+
+    // Format activity data to ensure all 7 days are present
+    const activityData = [];
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0];
+      const dayName = days[d.getDay()];
+      
+      const stat = activityStatsRaw.find(s => s._id === dateStr);
+      activityData.push({
+        name: dayName,
+        solved: stat ? stat.solved : 0
+      });
+    }
+
     res.status(200).json({
       totalProblems,
       solvedProblems,
+      difficultyData,
+      activityData,
       ...(totalUsers !== null && { totalUsers })
     });
   } catch (error) {

@@ -6,22 +6,7 @@ import { getStats, getAllUsers } from '../api/auth';
 import { getProblems, deleteProblem } from '../api/problems';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-// Mock data for graphs
-const activityData = [
-  { name: 'Mon', solved: 2 },
-  { name: 'Tue', solved: 4 },
-  { name: 'Wed', solved: 1 },
-  { name: 'Thu', solved: 5 },
-  { name: 'Fri', solved: 8 },
-  { name: 'Sat', solved: 3 },
-  { name: 'Sun', solved: 6 },
-];
-
-const difficultyData = [
-  { name: 'Easy', value: 12, color: '#10b981' }, // emerald-500
-  { name: 'Medium', value: 8, color: '#f59e0b' }, // amber-500
-  { name: 'Hard', value: 3, color: '#ef4444' }, // red-500
-];
+// No hardcoded data anymore
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -270,12 +255,27 @@ const Dashboard = () => {
             <h3 className="font-bold text-white mb-6">Activity (Past 7 Days)</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={activityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#333" opacity={0.2} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} />
-                  <Tooltip cursor={{ fill: '#222', opacity: 0.4 }} contentStyle={{ backgroundColor: '#000', borderColor: '#333' }} />
-                  <Bar dataKey="solved" fill="#fff" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                <BarChart data={stats.activityData || []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                  <XAxis 
+                    dataKey="name" 
+                    stroke="#94a3b8" 
+                    tick={{ fill: '#94a3b8', fontSize: 12 }} 
+                    axisLine={false} 
+                    tickLine={false} 
+                  />
+                  <YAxis 
+                    stroke="#94a3b8" 
+                    tick={{ fill: '#94a3b8', fontSize: 12 }} 
+                    axisLine={false} 
+                    tickLine={false} 
+                    allowDecimals={false}
+                  />
+                  <Tooltip 
+                    cursor={{ fill: '#1e293b' }} 
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#fff', borderRadius: '0.5rem' }} 
+                  />
+                  <Bar dataKey="solved" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={40} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -291,35 +291,31 @@ const Dashboard = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={difficultyData}
+                    data={stats.difficultyData || []}
                     cx="50%"
                     cy="50%"
                     innerRadius={60}
                     outerRadius={80}
                     paddingAngle={5}
                     dataKey="value"
-                    stroke="none"
                   >
-                    {difficultyData.map((entry, index) => (
+                    {(stats.difficultyData || []).map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '8px', color: '#fff', fontSize: '12px' }}
-                    itemStyle={{ color: '#fff' }}
-                  />
+                  <Tooltip content={<CustomTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none flex-col">
-                <span className="text-3xl font-bold text-slate-900 dark:text-white">23</span>
+                <span className="text-3xl font-bold text-slate-900 dark:text-white">{stats.solvedProblems ?? 0}</span>
                 <span className="text-xs text-slate-500">Solved</span>
               </div>
             </div>
-            <div className="flex justify-center gap-4 mt-2">
-              {difficultyData.map(item => (
-                <div key={item.name} className="flex items-center gap-1.5 text-xs text-slate-400">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }}></div>
-                  {item.name}
+            <div className="flex justify-center gap-6 mt-6">
+              {(stats.difficultyData || []).map(diff => (
+                <div key={diff.name} className="flex items-center gap-1.5 text-xs text-slate-400">
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: diff.color }}></div>
+                  {diff.name}
                 </div>
               ))}
             </div>

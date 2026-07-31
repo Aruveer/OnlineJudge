@@ -17,6 +17,7 @@ const { protect, authorize } = require('../middleware/authMiddleware');
 router.get('/leaderboard', getLeaderboard); // Must be before /:id
 router.get('/', getProblems);
 router.get('/:id', getProblemById);
+router.post('/run', runCode);
 
 // Protected routes for modifying problems (Admin only)
 router.post('/', protect, authorize('admin'), createProblem);
@@ -24,7 +25,7 @@ router.put('/:id', protect, authorize('admin'), updateProblem);
 router.delete('/:id', protect, authorize('admin'), deleteProblem);
 
 // Route for executing code with custom input
-router.post('/run', protect, runCode);
+// (Moved to public routes to allow mobile playground access without cookies)
 
 // Route for submitting code to the compiler
 router.post('/:id/submit', protect, submitCode);
