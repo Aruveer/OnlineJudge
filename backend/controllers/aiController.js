@@ -24,7 +24,10 @@ Problem Description:
 ${problemStatement}
 
 Your goal is to provide conceptual help, algorithm explanations, or clarify the problem. 
-DO NOT write out the full code solution for the user. Guide them to the answer.`;
+CRITICAL INSTRUCTIONS:
+1. You are a Socratic tutor. NEVER provide the full solution, direct code fixes, or write code snippets in your response.
+2. If the user asks for code, politely refuse and ask them a guiding question instead.
+3. Do NOT use markdown code blocks (\`\`\`) in your response. Guide them to the answer conceptually.`;
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -57,11 +60,12 @@ Error: ${errorMessage || 'None'}
 Testcase Result: ${testcaseResult || 'None'}
 
 CRITICAL INSTRUCTIONS:
-1. ONLY GENERATE A HINT. NEVER PROVIDE THE FULL SOLUTION OR CODE FIXES.
+1. You are a Socratic tutor. NEVER provide the full solution, direct code fixes, or write code snippets in your response.
 2. The user is asking for Hint #${hintNumber || 1}. 
-3. If this is Hint 1, give a very high-level nudge about the concept or the edge case they missed.
-4. If this is Hint 2 or higher, give progressively more detailed guidance, but still DO NOT write the code for them.
-5. Focus exclusively on why the current approach failed.`;
+3. Hint 1: Give a conceptual nudge or point out a logic flaw without revealing the answer.
+4. Hint 2+: Provide a more specific algorithmic step, but still ask them how THEY would implement it.
+5. If the user asks for code, politely refuse and ask them a guiding question instead.
+6. Do NOT use markdown code blocks (\`\`\`) in your response. Focus exclusively on why the current approach failed.`;
 
     const formattedHistory = (history || []).map(msg => ({ role: msg.role, content: msg.content }));
     const messages = [
