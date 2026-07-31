@@ -43,9 +43,7 @@ const seed = async () => {
           </ul>
           <h3>Output Format:</h3>
           <p>Print two space-separated integers representing the indices.</p>
-          <br />
-          <h3>Example 1:</h3>
-          <pre><strong>Input:</strong>\n4\n2 7 11 15\n9\n<strong>Output:</strong>\n0 1</pre>
+
         `,
         testCases: [
           { input: "4\n2 7 11 15\n9", expectedOutput: "0 1" },
@@ -65,9 +63,7 @@ const seed = async () => {
           <p>The first line contains a single string <code>s</code>.</p>
           <h3>Output Format:</h3>
           <p>Print the reversed string.</p>
-          <br />
-          <h3>Example 1:</h3>
-          <pre><strong>Input:</strong>\nhello\n<strong>Output:</strong>\nolleh</pre>
+
         `,
         testCases: [
           { input: "hello", expectedOutput: "olleh" },
@@ -87,9 +83,7 @@ const seed = async () => {
           <p>The first line contains the integer <code>x</code>.</p>
           <h3>Output Format:</h3>
           <p>Print <code>true</code> if it is a palindrome, otherwise print <code>false</code>.</p>
-          <br />
-          <h3>Example 1:</h3>
-          <pre><strong>Input:</strong>\n121\n<strong>Output:</strong>\ntrue</pre>
+
         `,
         testCases: [
           { input: "121", expectedOutput: "true" },
@@ -110,9 +104,7 @@ const seed = async () => {
           <p>The first line contains the string <code>s</code>.</p>
           <h3>Output Format:</h3>
           <p>Print <code>true</code> if valid, otherwise print <code>false</code>.</p>
-          <br />
-          <h3>Example 1:</h3>
-          <pre><strong>Input:</strong>\n()[]{}\n<strong>Output:</strong>\ntrue</pre>
+
         `,
         testCases: [
           { input: "()", expectedOutput: "true" },
@@ -136,9 +128,7 @@ const seed = async () => {
           </ul>
           <h3>Output Format:</h3>
           <p>Print a single integer representing the maximum sum.</p>
-          <br />
-          <h3>Example 1:</h3>
-          <pre><strong>Input:</strong>\n9\n-2 1 -3 4 -1 2 1 -5 4\n<strong>Output:</strong>\n6</pre>
+
         `,
         testCases: [
           { input: "9\n-2 1 -3 4 -1 2 1 -5 4", expectedOutput: "6" },
@@ -161,9 +151,7 @@ const seed = async () => {
           </ul>
           <h3>Output Format:</h3>
           <p>Print <code>true</code> if a duplicate exists, otherwise print <code>false</code>.</p>
-          <br />
-          <h3>Example 1:</h3>
-          <pre><strong>Input:</strong>\n4\n1 2 3 1\n<strong>Output:</strong>\ntrue</pre>
+
         `,
         testCases: [
           { input: "4\n1 2 3 1", expectedOutput: "true" },
@@ -183,9 +171,7 @@ const seed = async () => {
           <p>The first line contains a single integer <code>n</code>.</p>
           <h3>Output Format:</h3>
           <p>Print the <code>n</code> space-separated answers.</p>
-          <br />
-          <h3>Example 1:</h3>
-          <pre><strong>Input:</strong>\n3\n<strong>Output:</strong>\n1 2 Fizz</pre>
+
         `,
         testCases: [
           { input: "3", expectedOutput: "1 2 Fizz" },
@@ -208,9 +194,7 @@ const seed = async () => {
           </ul>
           <h3>Output Format:</h3>
           <p>Print the single unique integer.</p>
-          <br />
-          <h3>Example 1:</h3>
-          <pre><strong>Input:</strong>\n3\n2 2 1\n<strong>Output:</strong>\n1</pre>
+
         `,
         testCases: [
           { input: "3\n2 2 1", expectedOutput: "1" },
@@ -233,9 +217,7 @@ const seed = async () => {
           </ul>
           <h3>Output Format:</h3>
           <p>Print the missing integer.</p>
-          <br />
-          <h3>Example 1:</h3>
-          <pre><strong>Input:</strong>\n3\n3 0 1\n<strong>Output:</strong>\n2</pre>
+
         `,
         testCases: [
           { input: "3\n3 0 1", expectedOutput: "2" },
@@ -255,9 +237,7 @@ const seed = async () => {
           <p>The first line contains the integer <code>x</code>.</p>
           <h3>Output Format:</h3>
           <p>Print the reversed integer.</p>
-          <br />
-          <h3>Example 1:</h3>
-          <pre><strong>Input:</strong>\n123\n<strong>Output:</strong>\n321</pre>
+
         `,
         testCases: [
           { input: "123", expectedOutput: "321" },
