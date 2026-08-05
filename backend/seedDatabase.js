@@ -244,6 +244,223 @@ const seed = async () => {
           { input: "-123", expectedOutput: "-321" },
           { input: "120", expectedOutput: "21" }
         ]
+      },
+      {
+        title: 'Merge Intervals',
+        difficulty: 'Medium',
+        tags: ['Array', 'Sorting'],
+        timeLimit: 1.0,
+        memoryLimit: 256,
+        description: `
+          <p>Given an array of intervals where <code>intervals[i] = [starti, endi]</code>, merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.</p>
+          <br />
+          <h3>Input Format:</h3>
+          <ul>
+            <li>The first line contains an integer <code>n</code>, the number of intervals.</li>
+            <li>The next <code>n</code> lines each contain two space-separated integers representing the start and end of an interval.</li>
+          </ul>
+          <h3>Output Format:</h3>
+          <p>Print the merged intervals, each on a new line, space-separated.</p>
+        `,
+        testCases: [
+          { input: "4\n1 3\n2 6\n8 10\n15 18", expectedOutput: "1 6\n8 10\n15 18" },
+          { input: "2\n1 4\n4 5", expectedOutput: "1 5" }
+        ]
+      },
+      {
+        title: 'Climbing Stairs',
+        difficulty: 'Easy',
+        tags: ['Dynamic Programming', 'Math'],
+        timeLimit: 1.0,
+        memoryLimit: 256,
+        description: `
+          <p>You are climbing a staircase. It takes <code>n</code> steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?</p>
+          <br />
+          <h3>Input Format:</h3>
+          <p>The first line contains an integer <code>n</code>.</p>
+          <h3>Output Format:</h3>
+          <p>Print the number of distinct ways.</p>
+        `,
+        testCases: [
+          { input: "2", expectedOutput: "2" },
+          { input: "3", expectedOutput: "3" }
+        ]
+      },
+      {
+        title: 'Maximum Subarray',
+        difficulty: 'Medium',
+        tags: ['Array', 'Dynamic Programming'],
+        timeLimit: 1.0,
+        memoryLimit: 256,
+        description: `
+          <p>Given an integer array <code>nums</code>, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.</p>
+          <br />
+          <h3>Input Format:</h3>
+          <ul>
+            <li>The first line contains an integer <code>n</code>.</li>
+            <li>The second line contains <code>n</code> space-separated integers.</li>
+          </ul>
+          <h3>Output Format:</h3>
+          <p>Print the maximum subarray sum.</p>
+        `,
+        testCases: [
+          { input: "9\n-2 1 -3 4 -1 2 1 -5 4", expectedOutput: "6" },
+          { input: "1\n1", expectedOutput: "1" }
+        ]
+      },
+      {
+        title: 'Number of Islands',
+        difficulty: 'Medium',
+        tags: ['Array', 'DFS', 'BFS', 'Matrix'],
+        timeLimit: 2.0,
+        memoryLimit: 256,
+        description: `
+          <p>Given an <code>m x n</code> 2D binary grid <code>grid</code> which represents a map of '1's (land) and '0's (water), return the number of islands.</p>
+          <p>An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically.</p>
+          <br />
+          <h3>Input Format:</h3>
+          <ul>
+            <li>The first line contains two integers <code>m</code> and <code>n</code>.</li>
+            <li>The next <code>m</code> lines each contain a string of length <code>n</code> consisting of '0' and '1'.</li>
+          </ul>
+          <h3>Output Format:</h3>
+          <p>Print the number of islands.</p>
+        `,
+        testCases: [
+          { input: "4 5\n11110\n11010\n11000\n00000", expectedOutput: "1" },
+          { input: "4 5\n11000\n11000\n00100\n00011", expectedOutput: "3" }
+        ]
+      },
+      {
+        title: 'Longest Substring Without Repeating Characters',
+        difficulty: 'Medium',
+        tags: ['String', 'Sliding Window', 'Hash Table'],
+        timeLimit: 1.0,
+        memoryLimit: 256,
+        description: `
+          <p>Given a string <code>s</code>, find the length of the longest substring without repeating characters.</p>
+          <br />
+          <h3>Input Format:</h3>
+          <p>The first line contains the string <code>s</code>.</p>
+          <h3>Output Format:</h3>
+          <p>Print the length of the longest substring.</p>
+        `,
+        testCases: [
+          { input: "abcabcbb", expectedOutput: "3" },
+          { input: "bbbbb", expectedOutput: "1" }
+        ]
+      },
+      {
+        title: 'Valid Anagram',
+        difficulty: 'Easy',
+        tags: ['String', 'Sorting', 'Hash Table'],
+        timeLimit: 1.0,
+        memoryLimit: 256,
+        description: `
+          <p>Given two strings <code>s</code> and <code>t</code>, return true if <code>t</code> is an anagram of <code>s</code>, and false otherwise.</p>
+          <br />
+          <h3>Input Format:</h3>
+          <ul>
+            <li>The first line contains the string <code>s</code>.</li>
+            <li>The second line contains the string <code>t</code>.</li>
+          </ul>
+          <h3>Output Format:</h3>
+          <p>Print <code>true</code> if they are anagrams, <code>false</code> otherwise.</p>
+        `,
+        testCases: [
+          { input: "anagram\nnagaram", expectedOutput: "true" },
+          { input: "rat\ncar", expectedOutput: "false" }
+        ]
+      },
+      {
+        title: 'Product of Array Except Self',
+        difficulty: 'Medium',
+        tags: ['Array', 'Prefix Sum'],
+        timeLimit: 1.0,
+        memoryLimit: 256,
+        description: `
+          <p>Given an integer array <code>nums</code>, return an array <code>answer</code> such that <code>answer[i]</code> is equal to the product of all the elements of <code>nums</code> except <code>nums[i]</code>.</p>
+          <p>You must write an algorithm that runs in O(n) time and without using the division operation.</p>
+          <br />
+          <h3>Input Format:</h3>
+          <ul>
+            <li>The first line contains an integer <code>n</code>.</li>
+            <li>The second line contains <code>n</code> space-separated integers.</li>
+          </ul>
+          <h3>Output Format:</h3>
+          <p>Print the answer array, space-separated.</p>
+        `,
+        testCases: [
+          { input: "4\n1 2 3 4", expectedOutput: "24 12 8 6" },
+          { input: "5\n-1 1 0 -3 3", expectedOutput: "0 0 9 0 0" }
+        ]
+      },
+      {
+        title: 'Find Minimum in Rotated Sorted Array',
+        difficulty: 'Medium',
+        tags: ['Array', 'Binary Search'],
+        timeLimit: 1.0,
+        memoryLimit: 256,
+        description: `
+          <p>Suppose an array of length <code>n</code> sorted in ascending order is rotated between 1 and n times. Given the sorted rotated array <code>nums</code> of unique elements, return the minimum element of this array.</p>
+          <br />
+          <h3>Input Format:</h3>
+          <ul>
+            <li>The first line contains an integer <code>n</code>.</li>
+            <li>The second line contains <code>n</code> space-separated integers.</li>
+          </ul>
+          <h3>Output Format:</h3>
+          <p>Print the minimum element.</p>
+        `,
+        testCases: [
+          { input: "5\n3 4 5 1 2", expectedOutput: "1" },
+          { input: "7\n4 5 6 7 0 1 2", expectedOutput: "0" }
+        ]
+      },
+      {
+        title: 'Trapping Rain Water',
+        difficulty: 'Hard',
+        tags: ['Array', 'Two Pointers', 'Dynamic Programming', 'Stack'],
+        timeLimit: 1.0,
+        memoryLimit: 256,
+        description: `
+          <p>Given <code>n</code> non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.</p>
+          <br />
+          <h3>Input Format:</h3>
+          <ul>
+            <li>The first line contains an integer <code>n</code>.</li>
+            <li>The second line contains <code>n</code> space-separated integers.</li>
+          </ul>
+          <h3>Output Format:</h3>
+          <p>Print the amount of trapped water.</p>
+        `,
+        testCases: [
+          { input: "12\n0 1 0 2 1 0 1 3 2 1 2 1", expectedOutput: "6" },
+          { input: "6\n4 2 0 3 2 5", expectedOutput: "9" }
+        ]
+      },
+      {
+        title: 'Group Anagrams',
+        difficulty: 'Medium',
+        tags: ['Array', 'Hash Table', 'String', 'Sorting'],
+        timeLimit: 1.0,
+        memoryLimit: 256,
+        description: `
+          <p>Given an array of strings <code>strs</code>, group the anagrams together. You can return the answer in any order.</p>
+          <p>Note: Since output order doesn't matter for this judge, you must print each group on a new line, space-separated. The groups must be sorted lexicographically, and the words within each group must also be sorted lexicographically.</p>
+          <br />
+          <h3>Input Format:</h3>
+          <ul>
+            <li>The first line contains an integer <code>n</code>.</li>
+            <li>The second line contains <code>n</code> space-separated strings.</li>
+          </ul>
+          <h3>Output Format:</h3>
+          <p>Print each group on a new line.</p>
+        `,
+        testCases: [
+          { input: "6\neat tea tan ate nat bat", expectedOutput: "ate eat tea\nbat\nnat tan" },
+          { input: "1\na", expectedOutput: "a" }
+        ]
       }
     ];
 

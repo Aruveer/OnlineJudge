@@ -8,6 +8,10 @@ const ProblemList = () => {
   const [problems, setProblems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState('list'); // 'list' or 'grid'
+  
+  const [searchQuery, setSearchQuery] = useState('');
+  const [difficultyFilter, setDifficultyFilter] = useState('All');
+  const [tagFilter, setTagFilter] = useState('All');
 
   useEffect(() => {
     const fetchProblems = async () => {
@@ -31,6 +35,15 @@ const ProblemList = () => {
       default: return 'text-slate-400 bg-[#222] border-[#333]';
     }
   };
+
+  const allTags = ['All', ...new Set(problems.flatMap(p => p.tags || []))].sort();
+
+  const filteredProblems = problems.filter(problem => {
+    const matchesSearch = problem.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesDifficulty = difficultyFilter === 'All' || problem.difficulty === difficultyFilter;
+    const matchesTag = tagFilter === 'All' || (problem.tags && problem.tags.includes(tagFilter));
+    return matchesSearch && matchesDifficulty && matchesTag;
+  });
 
   return (
     <div className="p-8 max-w-7xl mx-auto w-full">
@@ -71,13 +84,49 @@ const ProblemList = () => {
         </div>
       </div>
       
+      {/* Search and Filters */}
+      <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          </div>
+          <input
+            type="text"
+            placeholder="Search problems..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 bg-[#111] border border-[#333] rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+          />
+        </div>
+        
+        <select
+          value={difficultyFilter}
+          onChange={(e) => setDifficultyFilter(e.target.value)}
+          className="w-full px-4 py-2.5 bg-[#111] border border-[#333] rounded-lg text-slate-300 focus:outline-none focus:border-blue-500 transition-colors appearance-none"
+        >
+          <option value="All">All Difficulties</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+        
+        <select
+          value={tagFilter}
+          onChange={(e) => setTagFilter(e.target.value)}
+          className="w-full px-4 py-2.5 bg-[#111] border border-[#333] rounded-lg text-slate-300 focus:outline-none focus:border-blue-500 transition-colors appearance-none"
+        >
+          {allTags.map(tag => (
+            <option key={tag} value={tag}>{tag === 'All' ? 'All Topics' : tag}</option>
+          ))}
+        </select>
+      </div>
       {isLoading ? (
         <div className="flex justify-center py-20">
           <div className="w-10 h-10 border-4 border-slate-200 dark:border-slate-700 border-t-blue-500 rounded-full animate-spin"></div>
         </div>
-      ) : problems.length === 0 ? (
+      ) : filteredProblems.length === 0 ? (
         <div className="col-span-full py-12 text-center text-slate-400 bg-[#111] rounded-2xl border border-[#333] border-dashed">
-          No problems found.
+          No problems found matching your filters.
         </div>
       ) : viewMode === 'grid' ? (
         <motion.div 
@@ -89,7 +138,7 @@ const ProblemList = () => {
           }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {problems.map((problem) => (
+          {filteredProblems.map((problem) => (
             <motion.div 
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
               key={problem._id}
@@ -136,7 +185,7 @@ const ProblemList = () => {
           className="glass-card bg-[#111] border border-[#333] rounded-xl overflow-hidden shadow-sm"
         >
           <div className="divide-y divide-[#333]">
-            {problems.map((problem) => (
+            {filteredProblems.map((problem) => (
               <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }} key={problem._id}>
                 <Link 
                   to={`/problems/${problem._id}`}
