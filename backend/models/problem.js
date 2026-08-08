@@ -10,6 +10,10 @@ const problemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  constraints: {
+    type: String,
+    default: ''
+  },
   starterCode: {
     type: String,
     default: '// Write your solution here\n'

@@ -37,11 +37,12 @@ const getProblemById = async (req, res) => {
 // @access  Private
 const createProblem = async (req, res) => {
   try {
-    const { title, description, difficulty, tags, timeLimit, memoryLimit, testCases } = req.body;
+    const { title, description, constraints, difficulty, tags, timeLimit, memoryLimit, testCases } = req.body;
 
     const problem = new Problem({
       title,
       description,
+      constraints,
       difficulty,
       tags,
       timeLimit,
@@ -63,17 +64,19 @@ const createProblem = async (req, res) => {
 // @access  Private
 const updateProblem = async (req, res) => {
   try {
-    const { title, statement, difficulty, tags, timeLimit, memoryLimit } = req.body;
+    const { title, description, constraints, difficulty, tags, timeLimit, memoryLimit, testCases } = req.body;
 
     const problem = await Problem.findById(req.params.id);
 
     if (problem) {
       problem.title = title || problem.title;
-      problem.statement = statement || problem.statement;
+      problem.description = description || problem.description;
+      if (constraints !== undefined) problem.constraints = constraints;
       problem.difficulty = difficulty || problem.difficulty;
       problem.tags = tags || problem.tags;
       problem.timeLimit = timeLimit || problem.timeLimit;
       problem.memoryLimit = memoryLimit || problem.memoryLimit;
+      if (testCases) problem.testCases = testCases;
 
       const updatedProblem = await problem.save();
       res.json(updatedProblem);

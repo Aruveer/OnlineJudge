@@ -12,6 +12,7 @@ const AdminCreateProblem = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    constraints: '',
     difficulty: 'Easy',
     tags: '',
     timeLimit: 1.0,
@@ -121,7 +122,19 @@ const AdminCreateProblem = () => {
                   required
                   rows="6"
                   className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Describe the problem, input format, output format, and constraints..."
+                  placeholder="Describe the problem, input format, output format..."
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-300">Constraints</label>
+                <textarea
+                  name="constraints"
+                  value={formData.constraints}
+                  onChange={handleFormChange}
+                  rows="3"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="e.g. 1 <= n <= 10^5"
                 />
               </div>
 

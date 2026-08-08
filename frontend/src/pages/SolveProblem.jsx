@@ -22,8 +22,23 @@ const SolveProblem = () => {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const [problem, setProblem] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [codeMap, setCodeMap] = useState(languageTemplates);
   const [language, setLanguage] = useState('cpp');
+  
+  const [codeMap, setCodeMap] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`solveit_code_${id}`);
+      if (saved) {
+        return { ...languageTemplates, ...JSON.parse(saved) };
+      }
+    } catch (e) {
+      console.error('Failed to load code from local storage');
+    }
+    return languageTemplates;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(`solveit_code_${id}`, JSON.stringify(codeMap));
+  }, [codeMap, id]);
 
   const code = codeMap[language];
   const setCode = (newCode) => {
@@ -59,7 +74,13 @@ const SolveProblem = () => {
         const data = await getProblemById(id);
         setProblem(data);
         if (data.starterCode && data.starterCode !== '// Write your solution here\n' && data.starterCode !== '// Read input from stdin\n// Output the result to stdout\n') {
-          setCodeMap(prev => ({ ...prev, javascript: data.starterCode }));
+          setCodeMap(prev => {
+            const isUnmodified = prev.javascript === languageTemplates.javascript;
+            if (isUnmodified) {
+              return { ...prev, javascript: data.starterCode };
+            }
+            return prev;
+          });
         }
       } catch (error) {
         toast.error('Failed to load problem details');
@@ -143,12 +164,13 @@ const SolveProblem = () => {
     
     try {
       const res = await submitCode(id, code, language);
-      setOutput((prev) => prev + '\n> Output:\n' + res.output);
       
       if (res.verdict === 'Accepted') {
+        setOutput('> Output:\n' + res.output);
         toast.success('Code Accepted!');
         setAcceptedContext({ problemTitle: problem?.title, problemStatement: problem?.description, code, language });
       } else {
+        setOutput(`> Verdict: ${res.verdict}\n\nOutput:\n${res.output || 'No output'}`);
         toast.error(`Submission Failed: ${res.verdict}`);
         setFailedContext({ problemTitle: problem?.title, problemStatement: problem?.description, code, language, errorMessage: res.verdict, testcaseResult: res.output });
       }
@@ -160,7 +182,7 @@ const SolveProblem = () => {
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to submit code');
       const errOut = error.response?.data?.details?.output || error.response?.data?.message || error.message;
-      setOutput((prev) => prev + '\n> Request Error: ' + errOut);
+      setOutput('> Request Error: ' + errOut);
       setFailedContext({ problemTitle: problem?.title, problemStatement: problem?.description, code, language, errorMessage: errOut, testcaseResult: 'Failed execution' });
     } finally {
       setIsSubmitting(false);
@@ -543,9 +565,9 @@ const SolveProblem = () => {
               <div className="flex h-10">
                 <div className="px-4 py-2 border-b-2 border-blue-500 text-slate-200 text-sm font-semibold flex items-center gap-2 bg-[#1e1e1e]">
                   <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                   </svg>
-                  Test Result
+                  {output ? 'Test Result' : 'Testcase'}
                 </div>
               </div>
               <div className="flex gap-2">
@@ -565,7 +587,22 @@ const SolveProblem = () => {
             <div className="flex-1 p-4 overflow-y-auto custom-scrollbar bg-[#1e1e1e]">
               <div className="flex flex-col gap-4">
                 {!output ? (
-                  <div className="text-slate-500 text-sm">You must run your code first.</div>
+                  <div className="text-slate-300 text-sm space-y-4">
+                    {problem?.testCases && problem.testCases.length > 0 ? (
+                      <>
+                        <div>
+                          <div className="text-xs text-slate-500 mb-1 font-semibold uppercase tracking-wider">Input</div>
+                          <div className="bg-[#1e1e1e] p-3 rounded-md border border-slate-700 font-mono text-[13px] whitespace-pre-wrap">{problem.testCases[0].input}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-slate-500 mb-1 font-semibold uppercase tracking-wider">Expected Output</div>
+                          <div className="bg-[#1e1e1e] p-3 rounded-md border border-slate-700 font-mono text-[13px] whitespace-pre-wrap">{problem.testCases[0].expectedOutput}</div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-slate-500">Run code to see results.</div>
+                    )}
+                  </div>
                 ) : (
                   <div className="rounded-lg p-4 border bg-[#0d1117] border-slate-700 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] text-slate-300">
                     <pre className="font-mono text-[13px] leading-relaxed whitespace-pre-wrap">

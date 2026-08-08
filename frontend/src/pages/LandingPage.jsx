@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { ThemeContext } from '../context/ThemeContext';
+import { AuthContext } from '../context/AuthContext';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const LandingPage = () => {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const { user } = useContext(AuthContext);
   const cursorRef = useRef(null);
   const cursorTrailRef = useRef(null);
   const elementsRef = useRef([]);
@@ -86,8 +88,14 @@ const LandingPage = () => {
             <a href="#compiler" className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors">Compiler</a>
             <a href="#features" className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors">AI Features</a>
             <div className="flex items-center space-x-4">
-              <Link to="/login" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">Log in</Link>
-              <Link to="/register" className="text-sm font-medium px-5 py-2.5 bg-black dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-200 rounded-full transition-transform hover:scale-105 shadow-lg">Register</Link>
+              {user ? (
+                <Link to="/dashboard" className="text-sm font-medium px-5 py-2.5 bg-black dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-200 rounded-full transition-transform hover:scale-105 shadow-lg">Go to Dashboard</Link>
+              ) : (
+                <>
+                  <Link to="/login" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">Log in</Link>
+                  <Link to="/register" className="text-sm font-medium px-5 py-2.5 bg-black dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-200 rounded-full transition-transform hover:scale-105 shadow-lg">Register</Link>
+                </>
+              )}
             </div>
           </div>
         </nav>
